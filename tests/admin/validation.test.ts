@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { studentFormSchema, teacherFormSchema } from "../../lib/admin/schemas";
+import { studentFormSchema, studentListQuerySchema, teacherFormSchema } from "../../lib/admin/schemas";
 
 const student = {
   admissionNumber: "S-1001", firstName: "Amina", lastName: "Rahimi", dateOfBirth: "2015-04-20", enrolledOn: "2026-03-21", status: "active" as const,
@@ -18,6 +18,21 @@ test("student form requires both academic year and section", () => {
   const result = studentFormSchema.safeParse({ ...student, sectionId: "" });
   assert.equal(result.success, false);
   if (!result.success) assert.match(result.error.issues[0]?.message ?? "", /academic year and section/i);
+});
+
+test("student list query keeps search and filters while accepting a later page", () => {
+  const result = studentListQuerySchema.parse({ page: "3", pageSize: "15", query: "  Amina  ", status: "active", sectionId: "22222222-2222-4222-8222-222222222222", academicYearId: "11111111-1111-4111-8111-111111111111" });
+  assert.deepEqual(result, { page: 3, pageSize: 15, query: "Amina", status: "active", sectionId: "22222222-2222-4222-8222-222222222222", academicYearId: "11111111-1111-4111-8111-111111111111" });
+});
+
+test("student list query accepts PostgreSQL-compatible legacy UUIDs", () => {
+  const result = studentListQuerySchema.safeParse({ academicYearId: "b1000000-0000-0000-0000-000000000001" });
+  assert.equal(result.success, true);
+});
+
+test("student list query rejects invalid page numbers and record statuses", () => {
+  assert.equal(studentListQuerySchema.safeParse({ page: "0" }).success, false);
+  assert.equal(studentListQuerySchema.safeParse({ status: "deleted" }).success, false);
 });
 
 test("teacher form prevents invalid employment dates", () => {

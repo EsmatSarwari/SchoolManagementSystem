@@ -2,13 +2,13 @@
 
 ## What the system does
 
-Jahan is a single-school web system for managing students, teachers, academic setup, attendance, results, timetables, announcements, and manual fee records. It is intentionally limited to one school and does not process online payments.
+Jahan is a single-school web system for managing students, teachers, academic setup, attendance, timetables, announcements, and manual fee records. It is intentionally limited to one school and does not process online payments. The exams, gradebooks, results, and report-card feature is currently hidden and unavailable.
 
 ## User roles
 
 - **Admin:** manages records, academic setup, fees, announcements, reports, account invitations, and the dashboard.
-- **Teacher:** works only with assigned classes and subjects, attendance, grades, timetables, and assigned-section announcements.
-- **Student:** reads personal attendance, timetable, published results/report cards, announcements, and fees.
+- **Teacher:** works only with assigned classes and subjects, attendance, timetables, and assigned-section announcements.
+- **Student:** reads personal attendance, timetable, announcements, and fees.
 - **Parent:** reads the same information for linked children only.
 
 Roles are fixed. Do not attempt to create custom roles in the database or interface.
@@ -17,7 +17,7 @@ Roles are fixed. Do not attempt to create custom roles in the database or interf
 
 - Student and teacher records with admissions/employment details and account linking.
 - Classes, sections, academic years, terms, subjects, teacher assignments, and enrollments.
-- Daily attendance, weekly timetables, exams, gradebooks, results, and PDF report cards.
+- Daily attendance and weekly timetables. The preserved exams, gradebooks, results, and PDF report-card code is temporarily disabled.
 - Targeted announcements, student and parent portals, manual fees/payments, and an operational admin dashboard.
 
 ## Important folders
@@ -87,7 +87,7 @@ The optional `supabase/seed.sql` file is for demonstrations, development, previe
 4. Add the environment variables separately to Preview and Production.
 5. In Supabase Auth, add `https://your-domain/auth/callback` and the corresponding Preview callback URLs. Set the Production Site URL to the final HTTPS domain.
 6. Add the custom domain in Vercel, verify DNS, then confirm the same domain in Supabase Auth.
-7. Enable backups/PITR if offered by the Supabase plan. Configure Vercel Firewall rate limits for `/api/results/*/report-card` and `/api/admin/accounts`.
+7. Enable backups/PITR if offered by the Supabase plan. Configure Vercel Firewall rate limits for `/api/admin/accounts`.
 8. Complete the smoke test in the handover checklist before announcing the release.
 
 The application allows `'unsafe-eval'` only while running in development because React needs it for useful debug errors. Production builds do not receive that CSP exception.
@@ -98,24 +98,25 @@ The application allows `'unsafe-eval'` only while running in development because
 2. Add teachers and students. Give each student an admission number and active enrollment. Add guardian details during student creation.
 3. Link a login account only when the person needs portal access. Send invitations through the supported admin workflow.
 4. Review daily attendance and resolve data errors promptly. Teachers mark attendance for their assignments.
-5. Create exams, configure subject papers, review grades, and publish only when complete. Published grades are locked to preserve the result history.
 6. Create fee types and fee records, then record cash/bank/manual payments. Do not enter a payment above the outstanding balance.
 7. Publish announcements to appropriate roles, classes, or sections. Review the dashboard and reports for daily operations.
+
+### Find students
+
+On **Admin → Students**, use the search field and the status, academic-year, and section filters together. Changing any filter returns the list to page 1. The selected filters and page are kept in the page address, so a refreshed or shared Students link opens the same list view.
 
 ## Teacher manual
 
 1. Sign in and use **Attendance** only for assigned sections and dates.
-2. Use **Grades** only for assigned subject papers. Check maximum marks before saving.
-3. A published exam cannot be altered. Ask an administrator to follow the documented correction process instead of editing result history.
-4. Review the timetable and use **Announcements** only for assigned sections. Teachers cannot manage fees or other administrators' records.
+2. Review the timetable and use **Announcements** only for assigned sections. Teachers cannot manage fees or other administrators' records.
 
 ## Student manual
 
-Students can view personal attendance, timetable, published results, download their own report card, announcements, and fee status. They cannot change academic, attendance, grade, or fee records. Missing or incorrect information should be reported to the school office.
+Students can view personal attendance, timetable, announcements, and fee status. They cannot change academic, attendance, or fee records. Missing or incorrect information should be reported to the school office.
 
 ## Parent manual
 
-Parents can select a linked child and view that child’s attendance, timetable, published results/report cards, announcements, and fee records. They cannot edit records or view any unlinked child. Ask the school office to correct a guardian link.
+Parents can select a linked child and view that child’s attendance, timetable, announcements, and fee records. They cannot edit records or view any unlinked child. Ask the school office to correct a guardian link.
 
 ## Change brand colors
 
@@ -155,12 +156,9 @@ Create one active academic year with valid start/end dates, then its terms, clas
 
 Create staff/student records first. Link a Supabase Auth account only when portal access is needed and choose the appropriate fixed role. A parent account must be linked to the correct child by an administrator. Deactivate records instead of deleting historical academic or financial evidence.
 
-## Generate report cards
+## Exams, results, and report cards
 
-1. Confirm that every required grade is entered and the exam is ready.
-2. Publish the exam from the admin workflow. Publication locks its grade history.
-3. The authorized student or linked parent can open the published result and download a private PDF report card. Administrators can use reporting screens for operational review.
-4. If a result is wrong, preserve the audit trail. Use the approved correction process and a new forward-only database change if a system-level issue exists.
+This feature is intentionally unavailable right now: its navigation entries and dashboard links are removed, its page files are stored as `page.disabled.tsx` so Next.js cannot create the old routes, and its APIs return no usable feature. The code and database schema are preserved. To restore it later, rename each preserved `page.disabled.tsx` file to `page.tsx` and set `resultsFeatureEnabled` to `true` in `lib/features/results.ts`, then run the normal checks before publishing it to users.
 
 ## Manage fees
 
@@ -204,7 +202,7 @@ Each month, run `npm ci`, `npm audit --omit=dev`, `npm run lint`, `npm run typec
 
 ## Development phases and important changes
 
-1. Core school modules delivered fixed roles, records, academics, attendance, results, timetables, announcements, portals, fees, and dashboard.
+1. Core school modules delivered fixed roles, records, academics, attendance, timetables, announcements, portals, fees, and dashboard. Exams, gradebooks, results, and report cards remain in the codebase but are currently disabled.
 2. UI and accessibility polish added responsive navigation, touch-friendly forms, readable tables, semantic tokens, focus visibility, and reduced-motion support.
 3. Production hardening added RLS/server guards, private Storage, authoritative fee/announcement workflows, transaction and lifecycle locks, safe API errors, secure PDF responses, CI, Vercel configuration, and release tests.
 4. The v1 release branch upgraded Next.js to 16.3.0, clearing the production dependency audit, and finalized this owner handover.

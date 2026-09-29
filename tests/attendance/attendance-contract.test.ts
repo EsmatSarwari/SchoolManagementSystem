@@ -12,6 +12,11 @@ test("attendance input rejects invalid dates and empty saves", () => {
   assert.equal(attendanceSaveSchema.safeParse({ ...input, records: [] }).success, false);
 });
 
+test("attendance input accepts PostgreSQL-compatible legacy UUIDs", () => {
+  const legacyUuid = "a1000000-0000-0000-0000-000000000001";
+  assert.equal(attendanceSaveSchema.safeParse({ ...input, sectionId: legacyUuid, academicYearId: legacyUuid, records: [{ ...record, studentId: legacyUuid }] }).success, true);
+});
+
 test("attendance summaries count all approved statuses toward the rate", () => {
   const summary = buildAttendanceSummary(["present", "late", "excused", "absent"]);
   assert.deepEqual(summary, { total: 4, present: 1, absent: 1, late: 1, excused: 1, rate: 75 });

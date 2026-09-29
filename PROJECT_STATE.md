@@ -7,7 +7,7 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 ## Current phase
 
 - Current phase: fictional demo-data seed is SQL Editor-compatible in source and ready for disposable Supabase validation alongside the existing release gates.
-- Last completed prompt: replace the seed's session-local reference table after Supabase SQL Editor could not retain it.
+- Last completed prompt: temporarily hide exams, gradebooks, results, and report cards while preserving their implementation.
 - In progress: validate the new seed against a disposable Supabase project. Live Supabase, browser E2E, accessibility, responsive visual, backup/restore, and deployment verification remain pending.
 
 ## Branch and release commits
@@ -20,6 +20,14 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 - Handover documentation: `b41e7a9` and `c7fc8e1`.
 
 ## Latest important changes
+
+- Attendance roster validation repair: attendance roster and save requests now accept the PostgreSQL-compatible legacy UUID IDs used by existing academic setup records. This resolves the attendance-page roster HTTP 400 error caused by Zod's stricter UUID validator.
+
+- Exams and results temporarily disabled: navigation entries, dashboard shortcuts/copy, and the admin reports link are removed; the original page code is preserved as non-routable `page.disabled.tsx` files and results APIs return unavailable. Restore the pages by renaming those files to `page.tsx` and setting `resultsFeatureEnabled` to `true`.
+
+- Students list query repair: search, status, academic-year, section, and page are now URL-backed and restored on reload/navigation. Changing any filter resets to page 1 while pagination preserves all active criteria. The server page uses the same validated query contract as the API, and the API now rejects unsupported student statuses before querying Postgres.
+- Students search follow-up: changing a Students filter now updates the address through the browser history API instead of triggering a concurrent App Router navigation. This prevents the server page from resetting in-flight client list queries while users type.
+- Students list validation repair: the current academic-year ID uses a PostgreSQL-compatible legacy UUID with version nibble `0`; Zod's stricter UUID validator rejected it and returned HTTP 400 for every filtered API request. Admin record/query validation now accepts the database's UUID shape while retaining structural validation.
 
 - Dashboard visual refresh: refreshed the authenticated shell and Admin, Teacher, Student, and Parent dashboards with centralized semantic dashboard tokens, a responsive briefing layout, colorful metric cards, and touch-friendly shortcut cards. Existing role scopes, API contracts, and server-rendered data access are unchanged.
 - Persistent color theme: added a token-driven premium dark palette and an accessible light/dark toggle in signed-in and public access screens. The first visit follows the device preference; an explicit choice is saved in browser storage as `jahan-color-theme` and applied before rendering to avoid a color flash.
@@ -35,7 +43,7 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 
 - Fixed Admin, Teacher, Student, and Parent roles with server authorization and Supabase RLS.
 - Student and teacher records; classes, sections, academic years, terms, subjects, assignments, and enrollments.
-- Attendance, timetable, exams, gradebooks, published results, private PDF report cards, and announcements.
+- Attendance, timetable, and announcements. Exams, gradebooks, published results, and private PDF report cards are preserved in source but currently disabled.
 - Read-only student and linked-child parent portals.
 - Admin-only manual fee records and payment history, including overpayment prevention and due-date-aware statuses.
 - Admin dashboard with active totals, attendance rate, fee status, and announcements.
@@ -48,14 +56,16 @@ Excluded features remain excluded: online payments, library, transport, hostel, 
 - Live status: unverified. Apply all 13 migrations only in timestamp order; never edit an applied migration.
 - pgTAP gates: `supabase/tests/database_foundation.test.sql` and `supabase/tests/production_hardening.test.sql`; execution requires a linked disposable Supabase database.
 
-## Test status, latest 2026-08-06
+## Test status, latest 2026-09-21
 
 - Vercel authentication configuration checks on 2026-08-06: Production environment values were added, the deployment completed successfully, and both live aliases returned `/login` without the authentication-configuration fallback. Local `npm run lint`, `npm run typecheck`, `npm run test` (28/28), and `npm run build` passed.
 - `npm ci --ignore-scripts`: passed; 0 vulnerabilities reported.
 - `npm audit --omit=dev`: passed; 0 vulnerabilities.
 - `npm run lint`: passed.
 - `npm run typecheck`: passed.
-- `npm run test`: passed, 28/28 tests.
+- `npm run test`: passed, 31/31 tests (including Students list query regression coverage).
+- Exams/results temporary-hide checks on 2026-09-21: `npm run lint`, `npm run typecheck`, `npm run test` (32/32), and `npm run build` passed.
+- Students list query repair checks: `npm run typecheck`, `npm run lint`, `npm run test` (31/31), and `npm run build` passed.
 - `npm run test:e2e -- --list`: passed; 3 role-access tests collected.
 - `npm run build`: passed with Next.js 16.3.0.
 - Dashboard visual-refresh checks on 2026-08-04: `npm run lint`, `npm run typecheck`, `npm run test` (28/28), and `npm run build` all passed.

@@ -2,6 +2,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { calculateFeeStatus } from "../../lib/fees/calculations";
+import { formatAfghani } from "../../lib/fees/money";
+
+test("fee amounts use Afghan afghani rather than dollars", () => {
+  assert.equal(formatAfghani(2500), "2,500 AFN");
+  assert.equal(formatAfghani(2500.5), "2,500.5 AFN");
+});
 
 test("fee status handles unpaid, partial, paid, and overdue balances", () => {
   assert.equal(calculateFeeStatus(100, 0, "2026-08-10", "2026-08-03"), "unpaid");
