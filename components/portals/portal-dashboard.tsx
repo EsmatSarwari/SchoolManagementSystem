@@ -18,7 +18,6 @@ type PortalLink = { href: string; label: string; detail: string; icon: LucideIco
 const studentLinks: PortalLink[] = [
   { href: "/student/timetable", label: "Timetable", detail: "See your weekly schedule", icon: LayoutGrid, tone: "bg-dashboard-aura" },
   { href: "/student/attendance", label: "Attendance", detail: "Follow your daily record", icon: CalendarCheck, tone: "bg-dashboard-mint" },
-  { href: "/student/results", label: "Results & report cards", detail: "View published results", icon: BookOpenCheck, tone: "bg-dashboard-lilac" },
   { href: "/student/announcements", label: "Announcements", detail: "Read school updates", icon: Bell, tone: "bg-dashboard-sun" },
   { href: "/student/fees", label: "Fee records", detail: "Review balances", icon: CreditCard, tone: "bg-muted" },
 ];
@@ -26,7 +25,6 @@ const studentLinks: PortalLink[] = [
 const parentLinks: PortalLink[] = [
   { href: "/parent/timetable", label: "Timetables", detail: "Review weekly schedules", icon: LayoutGrid, tone: "bg-dashboard-aura" },
   { href: "/parent/attendance", label: "Attendance", detail: "Follow attendance records", icon: CalendarCheck, tone: "bg-dashboard-mint" },
-  { href: "/parent/results", label: "Results & report cards", detail: "View published results", icon: BookOpenCheck, tone: "bg-dashboard-lilac" },
   { href: "/parent/announcements", label: "Announcements", detail: "Read school updates", icon: Bell, tone: "bg-dashboard-sun" },
   { href: "/parent/fees", label: "Fee records", detail: "Review fee information", icon: CreditCard, tone: "bg-muted" },
 ];
@@ -49,7 +47,7 @@ function PortalAnnouncements({ href, announcements }: { href: string; announceme
 }
 
 export function StudentPortalDashboard({ section, rate, announcements }: { section: string | null; rate: number; announcements: Announcement[] }) {
-  return <div className="space-y-6 sm:space-y-8"><section className="dashboard-hero relative overflow-hidden rounded-3xl px-5 py-6 text-white sm:px-8 sm:py-8"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">My school day</p><h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Everything for your school week, in one place.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-white/80">Keep up with your attendance, timetable, results, school announcements, and fee records.</p><Button className="mt-5 bg-white text-dashboard-ink hover:bg-white/90" asChild><Link href="/student/attendance">View attendance <ArrowRight className="size-4" /></Link></Button></section><section aria-label="Student overview" className="grid gap-3 sm:grid-cols-3"><OverviewCard label="Class & section" value={section ?? "Not enrolled"} detail="Your active placement" icon={UserRound} tone="bg-dashboard-aura text-dashboard-ink" /><OverviewCard label="Attendance rate" value={`${rate}%`} detail="Based on recorded days" icon={CalendarCheck} tone="bg-dashboard-mint text-accent-foreground" /><OverviewCard label="Fee records" value="View balances" detail="School fee information" icon={CreditCard} tone="bg-dashboard-lilac text-foreground" /></section><PortalLinks items={studentLinks} /><PortalAnnouncements href="/student/announcements" announcements={announcements} /></div>;
+  return <div className="space-y-6 sm:space-y-8"><section className="dashboard-hero relative overflow-hidden rounded-3xl px-5 py-6 text-white sm:px-8 sm:py-8"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">My school day</p><h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Everything for your school week, in one place.</h2><p className="mt-3 max-w-xl text-sm leading-6 text-white/80">Keep up with your attendance, timetable, school announcements, and fee records.</p><Button className="mt-5 bg-white text-dashboard-ink hover:bg-white/90" asChild><Link href="/student/attendance">View attendance <ArrowRight className="size-4" /></Link></Button></section><section aria-label="Student overview" className="grid gap-3 sm:grid-cols-3"><OverviewCard label="Class & section" value={section ?? "Not enrolled"} detail="Your active placement" icon={UserRound} tone="bg-dashboard-aura text-dashboard-ink" /><OverviewCard label="Attendance rate" value={`${rate}%`} detail="Based on recorded days" icon={CalendarCheck} tone="bg-dashboard-mint text-accent-foreground" /><OverviewCard label="Fee records" value="View balances" detail="School fee information" icon={CreditCard} tone="bg-dashboard-lilac text-foreground" /></section><PortalLinks items={studentLinks} /><PortalAnnouncements href="/student/announcements" announcements={announcements} /></div>;
 }
 
 export function ParentPortalDashboard({ childrenCount, announcements }: { childrenCount: number; announcements: Announcement[] }) {

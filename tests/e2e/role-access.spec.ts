@@ -20,14 +20,14 @@ test.describe("role access", () => {
     await expect(page.getByRole("heading", { name: "Manual fee records" })).toBeVisible();
   });
 
-  test("teacher scope excludes administration and permits attendance and grades", async ({ page }) => {
+  test("teacher scope excludes administration and permits attendance", async ({ page }) => {
     await signIn(page, process.env.E2E_TEACHER_EMAIL!, process.env.E2E_TEACHER_PASSWORD!, "/teacher");
     await page.goto("/admin");
     await expect(page).toHaveURL(/unauthorized/);
     await page.goto("/teacher/attendance");
     await expect(page.getByRole("heading", { name: "Mark attendance" })).toBeVisible();
     await page.goto("/teacher/grades");
-    await expect(page.getByRole("heading", { name: "My gradebooks" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "This page is not available" })).toBeVisible();
   });
 
   test("student and parent isolation keeps operational routes read-only", async ({ page }) => {
@@ -35,7 +35,7 @@ test.describe("role access", () => {
     await page.goto("/admin/fees");
     await expect(page).toHaveURL(/unauthorized/);
     await page.goto("/student/results");
-    await expect(page.getByRole("heading", { name: "My published results" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "This page is not available" })).toBeVisible();
     await signIn(page, process.env.E2E_PARENT_EMAIL!, process.env.E2E_PARENT_PASSWORD!, "/parent");
     await page.goto("/parent/attendance");
     await expect(page.getByRole("heading", { name: "Attendance" })).toBeVisible();

@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { studentStatuses, teacherStatuses } from "@/lib/admin/types";
 
-const id = z.uuid();
+// PostgreSQL accepts any RFC 4122-shaped UUID, including legacy/imported IDs
+// whose version nibble is 0. Zod's z.uuid() rejects those valid database IDs.
+const id = z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "A valid record ID is required.");
 const optionalText = (max: number) => z.string().trim().max(max).optional().transform((value) => value || null);
 const optionalEmail = z.union([z.email(), z.literal("")]).transform((value) => value || null);
 
@@ -44,3 +46,4 @@ export const sectionFormSchema = z.object({ classId: id, name: z.string().trim()
 export const statusChangeSchema = z.object({ status: z.enum(studentStatuses) });
 export const accountLinkSchema = z.object({ email: z.email(), role: z.enum(["student", "teacher", "parent"]), entityId: id, firstName: z.string().trim().min(1).max(100), lastName: z.string().trim().min(1).max(100) });
 export const listQuerySchema = z.object({ page: z.coerce.number().int().min(1).default(1), pageSize: z.coerce.number().int().min(5).max(50).default(15), query: z.string().trim().max(100).default(""), status: z.string().trim().max(20).default(""), sectionId: z.string().uuid().optional(), academicYearId: z.string().uuid().optional() });
+export const studentListQuerySchema = listQuerySchema.extend({ status: z.enum(studentStatuses).or(z.literal("")).default(""), sectionId: id.optional(), academicYearId: id.optional() });
