@@ -8,11 +8,11 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 
 - Current phase: fictional demo-data seed is SQL Editor-compatible in source and ready for disposable Supabase validation alongside the existing release gates.
 - Last completed prompt: temporarily hide exams, gradebooks, results, and report cards while preserving their implementation.
-- In progress: validate the new seed against a disposable Supabase project. Live Supabase, browser E2E, accessibility, responsive visual, backup/restore, and deployment verification remain pending.
+- In progress: validate the new seed and the password-recovery email flow against a disposable Supabase project. Live Supabase, browser E2E, accessibility, responsive visual, backup/restore, and deployment verification remain pending.
 
 ## Branch and release commits
 
-- Current branch: `main`
+- Current branch: `codex/password-recovery`
 - Current feature commit: `46a623c` (`fix: persist seed references across SQL editor statements`).
 - Last code merge: `d217248` (`Merge pull request #15 from ShoaibShuja/feat/dashboard-visual-refresh`)
 - Previous feature commit: `4104219` (`feat: add persistent dark mode`)
@@ -20,6 +20,8 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 - Handover documentation: `b41e7a9` and `c7fc8e1`.
 
 ## Latest important changes
+
+- Password recovery: added a generic-response forgot-password request screen, a Supabase Auth recovery callback redirect, and a session-protected new-password screen. Users are signed out after setting a password and must sign in again. Supabase Auth must allow each deployment origin's `/auth/callback` URL.
 
 - Attendance roster validation repair: attendance roster and save requests now accept the PostgreSQL-compatible legacy UUID IDs used by existing academic setup records. This resolves the attendance-page roster HTTP 400 error caused by Zod's stricter UUID validator.
 
@@ -57,6 +59,8 @@ Excluded features remain excluded: online payments, library, transport, hostel, 
 - pgTAP gates: `supabase/tests/database_foundation.test.sql` and `supabase/tests/production_hardening.test.sql`; execution requires a linked disposable Supabase database.
 
 ## Test status, latest 2026-09-21
+
+- Password-recovery source checks on 2026-11-08: `npm run lint` and `npm run typecheck` passed. `npm run test` could not start because the local Node runtime returned `ENOMEM` from `uv_os_get_passwd`. Production builds could not complete in this environment: Turbopack exited without a source diagnostic, and the webpack retry was blocked while fetching the existing `next/font` Google Geist assets. Validate the complete reset email flow and retry the test/build gates in Preview before release.
 
 - Vercel authentication configuration checks on 2026-08-06: Production environment values were added, the deployment completed successfully, and both live aliases returned `/login` without the authentication-configuration fallback. Local `npm run lint`, `npm run typecheck`, `npm run test` (28/28), and `npm run build` passed.
 - `npm ci --ignore-scripts`: passed; 0 vulnerabilities reported.

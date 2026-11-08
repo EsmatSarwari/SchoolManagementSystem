@@ -92,6 +92,10 @@ The optional `supabase/seed.sql` file is for demonstrations, development, previe
 
 The application allows `'unsafe-eval'` only while running in development because React needs it for useful debug errors. Production builds do not receive that CSP exception.
 
+## Reset a forgotten password
+
+On the sign-in page, select **Forgot password?**, enter the school-account email address, and use the secure link sent by Supabase Auth to choose a new password. The page always shows the same confirmation message so it does not reveal whether an email has an account. The reset link opens `/auth/callback`, which must remain listed in Supabase Auth redirect URLs for every local, Preview, and Production origin. The user is signed out after changing their password and must sign in again.
+
 ## Admin manual
 
 1. Start with **Academics**: create the active academic year, terms, classes, sections, subjects, and teacher assignments.
