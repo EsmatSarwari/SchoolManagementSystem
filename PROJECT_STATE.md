@@ -6,20 +6,22 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 
 ## Current phase
 
-- Current phase: fictional demo-data seed is SQL Editor-compatible in source and ready for disposable Supabase validation alongside the existing release gates.
-- Last completed prompt: temporarily hide exams, gradebooks, results, and report cards while preserving their implementation.
-- In progress: validate the new seed and the password-recovery email flow against a disposable Supabase project. Live Supabase, browser E2E, accessibility, responsive visual, backup/restore, and deployment verification remain pending.
+- Current phase: fee workflow repair is ready in source and requires migration and browser verification in a disposable Supabase project.
+- Last completed prompt: repair and simplify the admin fee-type, fee-record, and payment workflow.
+- In progress: apply migration 014 and validate the fee workflow against a disposable Supabase project. Live Supabase, browser E2E, accessibility, responsive visual, backup/restore, and deployment verification remain pending.
 
 ## Branch and release commits
 
-- Current branch: `codex/password-recovery`
-- Current feature commit: `46a623c` (`fix: persist seed references across SQL editor statements`).
+- Current branch: `codex/fee-workflow-repair`
+- Current feature commit: pending (`fix: repair secure fee workflow`).
 - Last code merge: `d217248` (`Merge pull request #15 from ShoaibShuja/feat/dashboard-visual-refresh`)
 - Previous feature commit: `4104219` (`feat: add persistent dark mode`)
 - Release code baseline: `2b3d21c` (`chore: update release dependencies`)
 - Handover documentation: `b41e7a9` and `c7fc8e1`.
 
 ## Latest important changes
+
+- Fee workflow repair: added migration `20261108001400_secure_fee_type_workflow.sql`, which supplies the missing administrator-only RPC for fee-type writes. The page now uses that RPC rather than a direct RLS-rejected insert. Fee creation pre-fills the selected type's usual amount, lists terms only for the chosen academic year, refreshes fee records after saves, and lets a newly created type be used without reloading. Payment entry defaults to cash and the selected balance while preserving the required, unique receipt reference and server-side overpayment prevention. Safe validation errors are now returned to the fee UI without exposing arbitrary database errors.
 
 - Password recovery: added a generic-response forgot-password request screen, a Supabase Auth recovery callback redirect, and a session-protected new-password screen. Users are signed out after setting a password and must sign in again. Supabase Auth must allow each deployment origin's `/auth/callback` URL.
 
@@ -54,11 +56,13 @@ Excluded features remain excluded: online payments, library, transport, hostel, 
 
 ## Migration status
 
-- Source migrations: present and ordered from `20260802000100_create_school_schema.sql` through `20260806001300_fix_grade_entry_validation.sql`. Storage buckets and policies belong exclusively to migration `20260802000400_create_private_storage_policies.sql`; `20260804001100_harden_privileged_workflows.sql` contains only fee and announcement workflow hardening.
-- Live status: unverified. Apply all 13 migrations only in timestamp order; never edit an applied migration.
+- Source migrations: present and ordered from `20260802000100_create_school_schema.sql` through `20261108001400_secure_fee_type_workflow.sql`. Storage buckets and policies belong exclusively to migration `20260802000400_create_private_storage_policies.sql`; `20260804001100_harden_privileged_workflows.sql` contains only fee and announcement workflow hardening.
+- Live status: unverified. Apply all 14 migrations only in timestamp order; never edit an applied migration.
 - pgTAP gates: `supabase/tests/database_foundation.test.sql` and `supabase/tests/production_hardening.test.sql`; execution requires a linked disposable Supabase database.
 
-## Test status, latest 2026-09-21
+## Test status, latest 2026-11-08
+
+- Fee workflow repair checks on 2026-11-08: `npm run lint` and `npm run typecheck` passed. `npm run test` could not start because the host Node runtime returned `ENOMEM` from `uv_os_get_passwd`. `npm run build` reached the production build but could not fetch the existing Google-hosted Geist fonts in this network-restricted environment. `git diff --check` passed. Database migration and browser role-workflow checks remain pending a disposable Supabase project.
 
 - Password-recovery source checks on 2026-11-08: `npm run lint` and `npm run typecheck` passed. `npm run test` could not start because the local Node runtime returned `ENOMEM` from `uv_os_get_passwd`. Production builds could not complete in this environment: Turbopack exited without a source diagnostic, and the webpack retry was blocked while fetching the existing `next/font` Google Geist assets. Validate the complete reset email flow and retry the test/build gates in Preview before release.
 
@@ -96,4 +100,4 @@ Excluded features remain excluded: online payments, library, transport, hostel, 
 
 ## Recommended next action
 
-Provision a disposable Supabase project and Vercel Preview; apply migrations 001-013 and `supabase/seed.sql`; execute pgTAP, RLS/Storage isolation, fictional-account Playwright, accessibility, mobile visual, and rollback smoke tests. Approve production only when each gate has recorded evidence.
+Provision a disposable Supabase project and Vercel Preview; apply migrations 001-014 and `supabase/seed.sql`; execute pgTAP, RLS/Storage isolation, fictional-account Playwright, accessibility, mobile visual, and rollback smoke tests. Specifically verify that an admin can create a fee type, add a fee record, and record a payment. Approve production only when each gate has recorded evidence.

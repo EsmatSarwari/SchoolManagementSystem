@@ -59,7 +59,7 @@ Roles are fixed. Do not attempt to create custom roles in the database or interf
 ## Connect Supabase and create the first admin
 
 1. Create separate Supabase projects for development/preview and production. Do not use demonstration data in production.
-2. In each project, apply all migration files in `supabase/migrations/` in timestamp order, ending with `20260806001300_fix_grade_entry_validation.sql`.
+2. In each project, apply all migration files in `supabase/migrations/` in timestamp order, ending with `20261108001400_secure_fee_type_workflow.sql`.
 3. Create the private Storage buckets named by the migrations, and confirm their policies applied. Keep `profile-photos`, `school-documents`, and `report-cards` private.
 4. For a disposable development or Preview project only, optionally paste `supabase/seed.sql` into the Supabase SQL Editor. It creates fictional Afghan school data and test accounts for all portals. Do not run it in Production or alongside real school data.
 5. Put the project URL, publishable key, and service-role key in the correct local or Vercel environment. Keep the service-role key server-only.
@@ -166,7 +166,7 @@ This feature is intentionally unavailable right now: its navigation entries and 
 
 ## Manage fees
 
-Fee records are manual bookkeeping, not online payments. An administrator creates a fee type and student fee record with an amount and due date, then records each payment. The system calculates unpaid, partially paid, paid, or overdue status. Payment history is append-only and the system rejects overpayments. Students and parents can only view authorized fee records.
+Fee records are manual bookkeeping, not online payments. An administrator first creates a fee type, then selects a student, fee type, academic year, amount, and due date to add a fee. The usual amount is filled in after choosing the fee type; terms shown belong only to the selected academic year. To record a payment, select the outstanding balance, confirm the received amount and date, and enter the school receipt number. The system calculates unpaid, partially paid, paid, or overdue status. Payment history is append-only and the system rejects overpayments. Students and parents can only view authorized fee records.
 
 ## Back up data and apply migrations
 

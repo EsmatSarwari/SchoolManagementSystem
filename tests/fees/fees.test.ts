@@ -22,6 +22,13 @@ test("database payment workflow prevents overpayment and requires administrators
   assert.match(integrity, /Fee payments cannot exceed the amount due/);
   assert.match(migration, /refresh_fee_record_status/);
 });
+test("fee types use the protected administrator workflow instead of direct writes", () => {
+  const migration = readFileSync("supabase/migrations/20261108001400_secure_fee_type_workflow.sql", "utf8");
+  const source = readFileSync("lib/fees/data.ts", "utf8");
+  assert.match(migration, /create or replace function public\.save_fee_type/);
+  assert.match(migration, /Only administrators can manage fee types/);
+  assert.match(source, /rpc\("save_fee_type"/);
+});
 test("student and parent fee reads remain scoped through protected helpers", () => {
   const source = readFileSync("lib/fees/data.ts", "utf8");
   assert.match(source, /requireRole\("student"\)/);
