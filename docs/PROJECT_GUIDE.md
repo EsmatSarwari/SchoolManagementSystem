@@ -103,7 +103,7 @@ On the sign-in page, select **Forgot password?**, enter the school-account email
 3. Link a login account only when the person needs portal access. Send invitations through the supported admin workflow.
 4. Review daily attendance and resolve data errors promptly. Teachers mark attendance for their assignments.
 6. Create fee types and fee records, then record cash/bank/manual payments. Do not enter a payment above the outstanding balance.
-7. Publish announcements to appropriate roles, classes, or sections. Review the dashboard and reports for daily operations.
+7. Publish announcements to appropriate roles, classes, or sections. Review the dashboard and reports for daily operations. **Reports** shows the current Kabul school day&apos;s attendance totals and recent marked records; use **Attendance** when you need a different date, class, section, student, or status.
 
 ### Create announcements
 

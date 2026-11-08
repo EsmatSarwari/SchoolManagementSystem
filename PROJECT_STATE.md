@@ -6,13 +6,13 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 
 ## Current phase
 
-- Current phase: announcement audience workflow repair is ready in source and requires browser verification in a disposable Supabase project.
-- Last completed prompt: repair announcement creation and audience targeting.
+- Current phase: attendance reporting display repair is complete in source and requires browser verification in a disposable Supabase project.
+- Last completed prompt: show current attendance correctly on the operational reports page.
 - In progress: validate the announcement workflow against a disposable Supabase project. Live Supabase, browser E2E, accessibility, responsive visual, backup/restore, and deployment verification remain pending.
 
 ## Branch and release commits
 
-- Current branch: `codex/announcement-workflow-repair`
+- Current branch: `codex/fix-reports-attendance-display`
 - Current feature commit: `a6bead1` (`fix: repair fee management workflow`).
 - Last code merge: `d217248` (`Merge pull request #15 from ShoaibShuja/feat/dashboard-visual-refresh`)
 - Previous feature commit: `4104219` (`feat: add persistent dark mode`)
@@ -20,6 +20,8 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 - Handover documentation: `b41e7a9` and `c7fc8e1`.
 
 ## Latest important changes
+
+- Attendance reports repair: Admin → Reports now displays the current Kabul school day&apos;s attendance totals (marked, present, absent, late, and rate) and the first ten matching student records. The existing attendance page remains the place for filtering and corrections.
 
 - Announcement workflow repair: class, section, and academic-year audience selections now accept PostgreSQL-compatible legacy UUIDs used by the existing database and demo seed. Role selections validate against the four fixed roles rather than UUIDs. The announcement form now presents readable role names and tells users how to make a multiple selection. This is an application validation repair; it needs no database migration.
 

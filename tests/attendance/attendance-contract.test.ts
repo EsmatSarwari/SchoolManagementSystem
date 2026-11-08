@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { attendanceSaveSchema } from "../../lib/attendance/schemas";
 import { buildAttendanceSummary } from "../../lib/attendance/utils";
+import { getCurrentSchoolDate } from "../../lib/dates/school-date";
 
 const record = { studentId: "11111111-1111-4111-8111-111111111111", status: "present" as const, remarks: "" };
 const input = { sectionId: "22222222-2222-4222-8222-222222222222", academicYearId: "33333333-3333-4333-8333-333333333333", date: "2026-08-02", records: [record] };
@@ -20,6 +21,19 @@ test("attendance input accepts PostgreSQL-compatible legacy UUIDs", () => {
 test("attendance summaries count all approved statuses toward the rate", () => {
   const summary = buildAttendanceSummary(["present", "late", "excused", "absent"]);
   assert.deepEqual(summary, { total: 4, present: 1, absent: 1, late: 1, excused: 1, rate: 75 });
+});
+
+test("school date uses Kabul's calendar day for attendance reports", () => {
+  assert.equal(getCurrentSchoolDate(new Date("2026-11-08T20:30:00.000Z")), "2026-11-09");
+});
+
+test("reports page renders the current attendance summary and records", async () => {
+  const reportPage = await readFile(new URL("../../app/(protected)/admin/reports/page.tsx", import.meta.url), "utf8");
+  assert.match(reportPage, /getCurrentSchoolDate\(\)/);
+  assert.match(reportPage, /getAdminAttendance\(\{ date: today \}\)/);
+  assert.match(reportPage, /Today&apos;s attendance/);
+  assert.match(reportPage, /Attendance rate/);
+  assert.match(reportPage, /attendance\.records\.slice\(0, 10\)/);
 });
 
 test("migration enforces assignment, duplicate safety, and academic-year dates", async () => {
