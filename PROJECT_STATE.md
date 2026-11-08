@@ -13,7 +13,7 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 ## Branch and release commits
 
 - Current branch: `codex/fee-workflow-repair`
-- Current feature commit: pending (`fix: repair secure fee workflow`).
+- Current feature commit: `a6bead1` (`fix: repair fee management workflow`).
 - Last code merge: `d217248` (`Merge pull request #15 from ShoaibShuja/feat/dashboard-visual-refresh`)
 - Previous feature commit: `4104219` (`feat: add persistent dark mode`)
 - Release code baseline: `2b3d21c` (`chore: update release dependencies`)
