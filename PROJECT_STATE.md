@@ -6,13 +6,13 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 
 ## Current phase
 
-- Current phase: fee workflow repair is ready in source and requires migration and browser verification in a disposable Supabase project.
-- Last completed prompt: repair and simplify the admin fee-type, fee-record, and payment workflow.
-- In progress: apply migration 014 and validate the fee workflow against a disposable Supabase project. Live Supabase, browser E2E, accessibility, responsive visual, backup/restore, and deployment verification remain pending.
+- Current phase: announcement audience workflow repair is ready in source and requires browser verification in a disposable Supabase project.
+- Last completed prompt: repair announcement creation and audience targeting.
+- In progress: validate the announcement workflow against a disposable Supabase project. Live Supabase, browser E2E, accessibility, responsive visual, backup/restore, and deployment verification remain pending.
 
 ## Branch and release commits
 
-- Current branch: `codex/fee-workflow-repair`
+- Current branch: `codex/announcement-workflow-repair`
 - Current feature commit: `a6bead1` (`fix: repair fee management workflow`).
 - Last code merge: `d217248` (`Merge pull request #15 from ShoaibShuja/feat/dashboard-visual-refresh`)
 - Previous feature commit: `4104219` (`feat: add persistent dark mode`)
@@ -20,6 +20,8 @@ Source release candidate complete. **Do not deploy to production yet.** Release 
 - Handover documentation: `b41e7a9` and `c7fc8e1`.
 
 ## Latest important changes
+
+- Announcement workflow repair: class, section, and academic-year audience selections now accept PostgreSQL-compatible legacy UUIDs used by the existing database and demo seed. Role selections validate against the four fixed roles rather than UUIDs. The announcement form now presents readable role names and tells users how to make a multiple selection. This is an application validation repair; it needs no database migration.
 
 - Fee workflow repair: added migration `20261108001400_secure_fee_type_workflow.sql`, which supplies the missing administrator-only RPC for fee-type writes. The page now uses that RPC rather than a direct RLS-rejected insert. Fee creation pre-fills the selected type's usual amount, lists terms only for the chosen academic year, refreshes fee records after saves, and lets a newly created type be used without reloading. Payment entry defaults to cash and the selected balance while preserving the required, unique receipt reference and server-side overpayment prevention. Safe validation errors are now returned to the fee UI without exposing arbitrary database errors.
 
@@ -62,7 +64,7 @@ Excluded features remain excluded: online payments, library, transport, hostel, 
 
 ## Test status, latest 2026-11-08
 
-- Fee workflow repair checks on 2026-11-08: `npm run lint` and `npm run typecheck` passed. `npm run test` could not start because the host Node runtime returned `ENOMEM` from `uv_os_get_passwd`. `npm run build` reached the production build but could not fetch the existing Google-hosted Geist fonts in this network-restricted environment. `git diff --check` passed. Database migration and browser role-workflow checks remain pending a disposable Supabase project.
+- Announcement workflow repair checks on 2026-11-08: `npm run lint`, `npm run typecheck`, and `git diff --check` passed. `npm run test` could not start because the host Node runtime returned `ENOMEM` from `uv_os_get_passwd`. `npm run build` reached the production build but could not fetch the existing Google-hosted Geist fonts in this network-restricted environment. Browser role-workflow checks remain pending a disposable Supabase project.
 
 - Password-recovery source checks on 2026-11-08: `npm run lint` and `npm run typecheck` passed. `npm run test` could not start because the local Node runtime returned `ENOMEM` from `uv_os_get_passwd`. Production builds could not complete in this environment: Turbopack exited without a source diagnostic, and the webpack retry was blocked while fetching the existing `next/font` Google Geist assets. Validate the complete reset email flow and retry the test/build gates in Preview before release.
 

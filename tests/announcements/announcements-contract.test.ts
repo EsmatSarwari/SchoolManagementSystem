@@ -4,9 +4,15 @@ import test from "node:test";
 import { announcementSchema } from "../../lib/announcements/schemas";
 
 const id = "11111111-1111-4111-8111-111111111111";
+const legacyPostgresId = "c1000000-0000-0000-0000-000000000001";
 test("announcement input requires valid targets and publication dates", () => {
   assert.equal(announcementSchema.safeParse({ title: "Update", body: "Body", status: "published", target: "section", targetIds: [], publishedOn: "", expiresOn: "" }).success, false);
   assert.equal(announcementSchema.safeParse({ title: "Update", body: "Body", status: "published", target: "section", targetIds: [id], publishedOn: "2026-09-02", expiresOn: "2026-09-01" }).success, false);
+});
+test("announcement input accepts database-compatible class IDs and validates role targets", () => {
+  assert.equal(announcementSchema.safeParse({ title: "Class update", body: "Body", status: "published", target: "class", targetIds: [legacyPostgresId], publishedOn: "2026-09-02", expiresOn: "" }).success, true);
+  assert.equal(announcementSchema.safeParse({ title: "Role update", body: "Body", status: "draft", target: "role", targetIds: ["parent", "student"], publishedOn: "", expiresOn: "" }).success, true);
+  assert.equal(announcementSchema.safeParse({ title: "Bad role", body: "Body", status: "draft", target: "role", targetIds: [legacyPostgresId], publishedOn: "", expiresOn: "" }).success, false);
 });
 test("announcement migration scopes teachers and hides unpublished or expired updates", async () => {
   const [migration, helpers] = await Promise.all([readFile(new URL("../../supabase/migrations/20260803000900_secure_announcements_and_portals.sql", import.meta.url), "utf8"), readFile(new URL("../../supabase/migrations/20260802000200_add_integrity_and_security_helpers.sql", import.meta.url), "utf8")]);

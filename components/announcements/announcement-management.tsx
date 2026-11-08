@@ -28,7 +28,7 @@ function AnnouncementFormEditor({ setup, item, submit, pending }: { setup: Annou
   const [target, setTarget] = useState<Values["target"]>(initialTarget);
   const targetField = form.register("target");
   const options = target === "role"
-    ? setup.roles.map((value) => ({ id: value, label: value }))
+    ? setup.roles.map((value) => ({ id: value, label: `${value.charAt(0).toUpperCase()}${value.slice(1)}` }))
     : target === "class"
       ? setup.classes.map((value) => ({ id: value.id, label: value.name }))
       : target === "section"
@@ -62,6 +62,7 @@ function AnnouncementFormEditor({ setup, item, submit, pending }: { setup: Annou
         <select id="announcementTargets" multiple className="min-h-28 w-full rounded-md border bg-card px-3 py-2 text-sm" {...form.register("targetIds")}>
           {options.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
         </select>
+        <p className="mt-1 text-xs text-muted-foreground">Select one or more targets. On a computer, hold Ctrl (or Command) to select more than one.</p>
       </FormField> : null}
       <div className="grid gap-4 sm:grid-cols-2">
         <FormField id="publishOn" label="Publish date" error={form.formState.errors.publishedOn?.message}><Input id="publishOn" type="date" {...form.register("publishedOn")} /></FormField>

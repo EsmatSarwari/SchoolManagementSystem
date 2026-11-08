@@ -105,6 +105,10 @@ On the sign-in page, select **Forgot password?**, enter the school-account email
 6. Create fee types and fee records, then record cash/bank/manual payments. Do not enter a payment above the outstanding balance.
 7. Publish announcements to appropriate roles, classes, or sections. Review the dashboard and reports for daily operations.
 
+### Create announcements
+
+Choose **Announcements**, select a draft, published, or archived status, then choose the audience. Administrators can select all users, a role, a class, a section, or an academic year. Teachers can select only sections assigned to them. For a targeted announcement, select at least one target; on a computer, hold Ctrl (or Command on Mac) to select more than one. A published announcement needs a publish date, and its expiry date must be later if supplied.
+
 ### Find students
 
 On **Admin → Students**, use the search field and the status, academic-year, and section filters together. Changing any filter returns the list to page 1. The selected filters and page are kept in the page address, so a refreshed or shared Students link opens the same list view.
@@ -189,6 +193,7 @@ Each month, run `npm ci`, `npm audit --omit=dev`, `npm run lint`, `npm run typec
 - **Migration fails:** stop promotion. Investigate in non-production and add a new corrective migration; never edit a migration already applied elsewhere. Storage buckets and their policies are created in migration `004`; run it before later workflow migrations.
 - **Report card fails:** verify a published, complete result and student/parent scope. Check Vercel Firewall and sanitized logs.
 - **A parent sees no child:** verify the administrator created the correct guardian-child link and the child remains active.
+- **An announcement will not save:** confirm its targeted audience has at least one selected item, its publish date is present when publishing, and expiry is later than publishing. Teachers must select only their assigned sections.
 
 ## Known limitations
 
@@ -212,3 +217,4 @@ Each month, run `npm ci`, `npm audit --omit=dev`, `npm run lint`, `npm run typec
 4. The v1 release branch upgraded Next.js to 16.3.0, clearing the production dependency audit, and finalized this owner handover.
 5. The dashboard visual refresh introduced a responsive command-center style for all four roles, with central color tokens, clearer daily actions, and touch-friendly cards.
 6. Persistent light/dark mode added a device-aware initial preference, a browser-saved explicit choice, pre-render theme application, and an accessible theme toggle across protected and public access screens.
+7. Announcement targeting accepts the valid PostgreSQL UUID format used by existing imported class, section, and academic-year records; role targeting is separately validated against the four fixed roles.
